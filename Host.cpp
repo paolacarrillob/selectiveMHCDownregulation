@@ -1160,8 +1160,8 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 	switch (virusType)
 	{
 		case 0: //if it's a wild-type virus, check first whether the viral molecule engages an aNKR
-		//	cout<< "This is not happenning !" <<endl;
-		//	exit (666);
+			cout<< "This is not happenning !" <<endl;
+			exit (666);
 		{
 			//cout <<"virus is wild-type and is being cleared"<<endl;
 			vector<KIRGene> :: iterator firstIt;
@@ -1184,6 +1184,7 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 				{
 					_infection.ResetInfection(simulationTime);//there should be maximal protection
 					_infection.SetProtectionLevel("best");
+					return;
 				}
 				//else
 				//	_infection.SetProtectionLevel("zero");
@@ -1194,6 +1195,7 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 				{
 					_infection.ResetInfection(simulationTime);//because of responses of the adaptive immune system
 					_infection.SetProtectionLevel("high");
+					return;
 				}
 				//else
 					//_infection.SetProtectionLevel("zero");
@@ -1202,8 +1204,8 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 		}break;
 		case 1: //if it's an mHC downregulating virus, check first whether there is only one MHC that has been downregulated
 		{
-			//cout<< "This is not happenning !" <<endl;
-			//exit (666);
+			cout<< "This is not happenning !" <<endl;
+			exit (666);
 			
 			//cout <<"virus is downregulating all MHCs and is being cleared"<<endl;
 			if(_infection.pathogen.IsDownregulatingMHCSpecifically())
@@ -1247,6 +1249,15 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 		}break;
 		case 2: //it downregulates A
 		{	
+			/*
+			 //toy model
+			if(RandomNumberDouble()<0.6) //
+			{
+				_infection.ResetInfection(simulationTime);
+				return;
+				//cout <<"virus is downregulating B part of the MHC and is being cleared"<<endl;
+			}break;//*/
+			
 			vector<Gene> mhcB_Local;
 			mhcB_Local.push_back(mhcGenes.at(1));
 			mhcB_Local.push_back(mhcGenes.at(3));
@@ -1270,11 +1281,14 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 						int score = nkrIt->BindMolecule(*mhcB_Local_it);
 						if(score < nkrIt->GetGeneSpecificity())
 						{
+							//if one iNKR does NOT bind to an MHC, clear the infection with p=0.6,
+							//with p = 1-0.6 do not clear it ;). Anyway... return
 							if(RandomNumberDouble()<0.6) //
 							{
 								_infection.ResetInfection(simulationTime);
 								//cout <<"virus is downregulating A part of the MHC and is being cleared"<<endl;
 							}
+							return;
 							//cout << "one protective iNKR found virus downregulating MHC A :-) "<<endl;
 						}
 					}
@@ -1283,6 +1297,16 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 		}break;
 		case 3: //it downregulates B
 		{
+			
+			/*
+			toy model
+			if(RandomNumberDouble()<0.6) //
+			{
+				_infection.ResetInfection(simulationTime);
+				return;
+				//cout <<"virus is downregulating B part of the MHC and is being cleared"<<endl;
+			}break;
+			//*/
 			vector<Gene> mhcA_Local;
 	
 			mhcA_Local.push_back(mhcGenes.at(0));
@@ -1304,11 +1328,15 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 						int score = nkrIt->BindMolecule(*mhcA_Local_it);
 						if(score < nkrIt->GetGeneSpecificity())
 						{
-							if(RandomNumberDouble()<0.6) //
+							//if one iNKR does NOT bind to an MHC, clear the infection with p=0.6,
+							//with p = 1-0.6 do not clear it ;). Anyway... return
+							if(RandomNumberDouble()<0.6) 
 							{
 								_infection.ResetInfection(simulationTime);
+								
 								//cout <<"virus is downregulating B part of the MHC and is being cleared"<<endl;
 							}
+							return;
 							//cout << "one protective iNKR found virus downregulating MHC B :-) "<<endl;
 						}
 					}
