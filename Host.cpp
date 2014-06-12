@@ -1271,6 +1271,27 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 					continue;
 				else
 				{
+					bool iNKRDoesNotBindToAnyMHC = true;
+					//if the virus downregulates A, then check whether the iNKRs bind the B alleles
+					vector<Gene>::iterator mhcB_Local_it = mhcB_Local.begin();
+					for(;mhcB_Local_it!=mhcB_Local.end();mhcB_Local_it++)
+					{
+						int score = nkrIt->BindMolecule(*mhcB_Local_it);
+						if (score >= nkrIt->GetGeneSpecificity()) //if it binds to one it should not be protective
+							iNKRDoesNotBindToAnyMHC = false;
+					}
+					if(iNKRDoesNotBindToAnyMHC)
+					{
+						//if one iNKR is protective, i.e. if it does NOT bind to any MHC A, clear the infection with p=0.6,
+						//with p = 1-0.6 do not clear it ;). Anyway... return
+						if(RandomNumberDouble()<0.6)
+							_infection.ResetInfection(simulationTime);
+						return;
+					}
+				}
+
+				/*else
+				{
 					//if the virus downregulates A, then check whether the iNKRs bind the B alleles
 					vector<Gene>::iterator mhcB_Local_it = mhcB_Local.begin();
 					for(;mhcB_Local_it!=mhcB_Local.end();mhcB_Local_it++)					
@@ -1292,7 +1313,7 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 							//cout << "one protective iNKR found virus downregulating MHC A :-) "<<endl;
 						}
 					}
-				}
+				}//*/
 			}
 		}break;
 		case 3: //it downregulates B
@@ -1320,6 +1341,25 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 					continue;
 				else
 				{
+					bool iNKRDoesNotBindToAnyMHC = true;
+					//if the virus downregulates B, then check whether the iNKRs bind the A alleles
+					vector<Gene>::iterator mhcA_Local_it = mhcA_Local.begin();
+					for(;mhcA_Local_it!=mhcA_Local.end();mhcA_Local_it++)
+					{
+						int score = nkrIt->BindMolecule(*mhcA_Local_it);
+						if (score >= nkrIt->GetGeneSpecificity()) //if it binds to one it should not be protective
+							iNKRDoesNotBindToAnyMHC = false;
+					}
+					if(iNKRDoesNotBindToAnyMHC)
+					{
+						//if one iNKR is protective, i.e. if it does NOT bind to any MHC A, clear the infection with p=0.6,
+						//with p = 1-0.6 do not clear it ;). Anyway... return
+						if(RandomNumberDouble()<0.6) //
+							_infection.ResetInfection(simulationTime);						}
+						return;
+				}
+				/*else
+				{
 					//if the virus downregulates B, then check whether the iNKRs bind the A alleles
 					vector<Gene>::iterator mhcA_Local_it = mhcA_Local.begin();
 					for(;mhcA_Local_it!=mhcA_Local.end();mhcA_Local_it++)
@@ -1340,10 +1380,10 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 							//cout << "one protective iNKR found virus downregulating MHC B :-) "<<endl;
 						}
 					}
-				}
+				}//*/
 			}	
 		}break;
-		default: cout <<"Host::ClearInfection()... weird virusType detected!!!"<<endl; exit(-1);
+		default: cout <<"Host::ClearInfection()... weird virusType detected!!!"<<endl; exit(-890);
 	}//*/
 }
 

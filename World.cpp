@@ -148,7 +148,7 @@ void World :: WriteInfo()
 	cout << "Decoy Steals MHC " << decoyStealsMHC << "\n";
 	cout << "Maximal Number of Infections " << maxNumberOfInfectionsPerHost << "\n";
 	cout << "MHC downregulation type" << specificMhcDownregulation <<"\n";
-	cout << "/////////////////// Version sunny bloody Sunday 1.2 :-)"<<endl;
+	cout << "/////////////////// Version sunny bloody Thursday 1.3 :-)"<<endl;
 	
 }
 
