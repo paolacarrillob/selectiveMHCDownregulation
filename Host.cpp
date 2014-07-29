@@ -339,10 +339,7 @@ Host::Host(int loci_kir, int loci_mhc, vector<Gene>& mhcGenesParent, GenePool& m
 			//MUTATION!
 			if(RandomNumberDouble() < mutationRateHost)
 			{
-//				if(!invasion_analysis)//is there a mutual invasion analysis?
 					MutateGenes(mutationType, kir_hap2, kirMap, mhcPoolA, mhcPoolB, gene_type); //if no, mutate regularly
-//				else
-//					MutateGenesForMutualInvasion(mutationType, kir_hap2, kirMap, mhcPoolA, mhcPoolB, simulation_time, time_invation, gene_type);
 			}
 			kirGenes.push_back(kir_hap2);
 		}
@@ -352,10 +349,7 @@ Host::Host(int loci_kir, int loci_mhc, vector<Gene>& mhcGenesParent, GenePool& m
 			kir_hap1.Copy(kirGenesMother.at(j));
 			if(RandomNumberDouble() < mutationRateHost)
 			{
-//				if(!invasion_analysis)//is there a mutual invasion analysis?
 					MutateGenes(mutationType, kir_hap1, kirMap, mhcPoolA, mhcPoolB, gene_type); //if no, mutate regularly
-//				else
-//					MutateGenesForMutualInvasion(mutationType, kir_hap1, kirMap, mhcPoolA, mhcPoolB, simulation_time, time_invation, gene_type);
 			}
 			kirGenes.push_back(kir_hap1);
 		}
@@ -368,10 +362,7 @@ Host::Host(int loci_kir, int loci_mhc, vector<Gene>& mhcGenesParent, GenePool& m
 			kir_hap1.Copy(kirGenesMother.at(i));
 			if(RandomNumberDouble() < mutationRateHost)
 			{
-//				if(!invasion_analysis)//is there a mutual invasion analysis?
 					MutateGenes(mutationType, kir_hap1, kirMap, mhcPoolA, mhcPoolB, gene_type); //if no, mutate regularly
-//				else
-//					MutateGenesForMutualInvasion(mutationType, kir_hap1, kirMap, mhcPoolA, mhcPoolB, simulation_time, time_invation, gene_type);
 			}
 			kirGenes.push_back(kir_hap1);
 		}
@@ -381,17 +372,11 @@ Host::Host(int loci_kir, int loci_mhc, vector<Gene>& mhcGenesParent, GenePool& m
 			kir_hap2.Copy(kirGenesFather.at(j));
 			if(RandomNumberDouble() < mutationRateHost)
 			{
-//				if(!invasion_analysis)//is there a mutual invasion analysis?
 					MutateGenes(mutationType, kir_hap2, kirMap, mhcPoolA, mhcPoolB, gene_type); //if no, mutate regularly
-//				else
-//					MutateGenesForMutualInvasion(mutationType, kir_hap2, kirMap, mhcPoolA,mhcPoolB, simulation_time, time_invation, gene_type);
 			}
 			kirGenes.push_back(kir_hap2);
 		}
 	}
-	
-	
-	
 	////////////
 	//MHCs :-)
 	////////////
@@ -568,15 +553,7 @@ void Host :: MutateGenes(int mutationType, KIRGene& kir_hap2, Map& kirMap, GeneP
 	if(mutationType == 1)//pick another molecules as mutation
 	{
 		KIRGene newGene(RandomNumber(2,16));
-		/*
-		if(!kirMap.IsGeneInMap(newGene))
-		{
-			kirMap.FillMap(mhcPoolA, mhcPoolB, newGene);
-			if(gene_type !=2)////force to have only one type of receptors, if the user wants it!
-				newGene.SetGeneType(gene_type);
-			kir_hap2.Copy(newGene);
-		}*/
-		//*
+
 		int M_id_A = 0;
 		int M_id_B = 0;
 		int mhcPoolASize = mhcPoolA.GetPoolSize();
@@ -681,84 +658,6 @@ void Host :: MutateGenes(int mutationType, KIRGene& kir_hap2, Map& kirMap, GeneP
 	}
 	*/
 }
-/*
-void Host :: MutateGenes(int mutationType, KIRGene& kir_hap2, Map& kirMap, GenePool& mhcPoolA, GenePool& mhcPoolB,int gene_type)
-{
-	if(mutationType == 1)//pick another molecules as mutation
-	{
-		KIRGene newGene(RandomNumber(2,16));
-		if(!kirMap.IsGeneInMap(newGene))
-		{
-			kirMap.FillMap(mhcPoolA, mhcPoolB, newGene);
-			if(gene_type !=2)////force to have only one type of receptors, if the user wants it!
-				newGene.SetGeneType(gene_type);
-			kir_hap2.Copy(newGene);
-		}
-		return;
-	}
-
-	if(mutationType == 2)//point mutation + L
-	{
-
-		if(RandomNumberDouble()<0.8) //pointmutation
-		{
-			kir_hap2.PointMutation();
-			kirMap.FillMap(mhcPoolA, mhcPoolB, kir_hap2);
-		}
-
-		if(RandomNumberDouble()<0.8) //mutate L
-		{
-			kir_hap2.MutateSpecificity();
-			kirMap.FillMap(mhcPoolA, mhcPoolB, kir_hap2);
-		}
-		if(RandomNumberDouble()<0.8)//mutate type
-		{
-			kir_hap2.MutateReceptorType();
-		}
-		return;
-	}
-}
-//*/
-void Host::MutateGenesForMutualInvasion(int mutationType, KIRGene& kir_hap2, Map& kirMap, GenePool& mhcPoolA, GenePool& mhcPoolB, double simulationTime, double time_invasion, int gene_type)
-{
-
-	if(mutationType == 1)//pick another molecule as mutation
-	{
-		KIRGene newGene(RandomNumber(2,16));
-		if(!kirMap.IsGeneInMap(newGene))
-		{
-			kirMap.FillMap(mhcPoolA, mhcPoolB,newGene);
-			//cout <<simulationTime << "|" <<time_invasion <<endl;
-			if(simulationTime < time_invasion)//only after the invasion time, the receptor type should be allowed to mutate
-				newGene.SetGeneType(gene_type);
-			kir_hap2.Copy(newGene);
-		}
-		return;
-	}
-
-	if(mutationType == 2)//point mutation + L
-	{
-		if(RandomNumberDouble()<0.8)
-		{
-			kir_hap2.PointMutation();
-			kirMap.FillMap(mhcPoolA, mhcPoolB,kir_hap2);
-		}
-
-		if(RandomNumberDouble()<0.2)
-		{
-			kir_hap2.MutateSpecificity();
-			kirMap.FillMap(mhcPoolA, mhcPoolB,kir_hap2);
-
-		}
-		if(RandomNumberDouble()<0.2)
-		{
-			if(simulationTime >= time_invasion) //only after the invasion time, the receptor type should be allowed to mutate
-				kir_hap2.MutateReceptorType();
-		}
-		return;
-	}
-}
-
 /*This functions tunes the KIR repertoire according to the self MHC repertoire and whether they are inhibiting or activating*/
 void Host :: EducateKIRs()
 {
@@ -978,22 +877,7 @@ Host& Host:: Copy(Host& rightHandSideHost)
 	{
 		this->kirGenes.push_back(rightHandSideHost.kirGenes.at(i));
 	}
-	//copy mhcA
-	//vector<Gene>::iterator it = rightHandSideHost.mhcA.begin();
-	//for(;it != rightHandSideHost.mhcA.end(); it++)
-	//	mhcA.push_back(*it);
-	/*
-	for(unsigned int i = 0; i<rightHandSideHost.mhcA.size();i++)
-	{
-		this->mhcA.push_back(rightHandSideHost.mhcA.at(i));
-	}
-	//copy mhcB
-	for(unsigned int i = 0; i<rightHandSideHost.mhcB.size();i++)
-	{
-		this->mhcB.push_back(rightHandSideHost.mhcB.at(i));
-	}
-	*/
-	
+
 	list<Infection>::iterator it;
 	for (it = rightHandSideHost.infections.begin() ; it !=rightHandSideHost.infections.end(); it++)
 	{
