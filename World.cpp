@@ -148,13 +148,14 @@ void World :: WriteInfo()
 	cout << "Decoy Steals MHC " << decoyStealsMHC << "\n";
 	cout << "Maximal Number of Infections " << maxNumberOfInfectionsPerHost << "\n";
 	cout << "MHC downregulation type" << specificMhcDownregulation <<"\n";
-	cout << "/////////////////// Version sunny sunny sunny summer days....version (hopefully) bug free.. August began!!!!!! :-)"<<endl;
+	cout << "/////////////////// Version sunny sunny sunny summer days....version (hopefully) bug free.. August began THIS IS DIFFERENT POOL SIZES!!!!!! :-)"<<endl;
 	
 }
 
 // initialize host population
 bool World::Initialize()
 {
+	int poolB = sizeMHCPool / 2.0;
 	//initialize MHcPool
 	if(similarMHCsInThePool)
 	{
@@ -164,11 +165,11 @@ bool World::Initialize()
 		if(RandomNumberDouble()<0.5)
 		{
 			MHCPoolA.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
-			MHCPoolB.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
+			MHCPoolB.FillMHCGenePoolWithSimilarMHCs(poolB);
 		}
 		else
 		{
-			MHCPoolB.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
+			MHCPoolB.FillMHCGenePoolWithSimilarMHCs(poolB);
 			MHCPoolA.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
 		}//*/
 
@@ -181,11 +182,11 @@ bool World::Initialize()
 		if(RandomNumberDouble()<0.5)
 		{
 			MHCPoolA.FillMHCGenePool(sizeMHCPool);
-			MHCPoolB.FillMHCGenePool(sizeMHCPool);
+			MHCPoolB.FillMHCGenePool(poolB);
 		}
 		else
 		{
-			MHCPoolB.FillMHCGenePool(sizeMHCPool);
+			MHCPoolB.FillMHCGenePool(poolB);
 			MHCPoolA.FillMHCGenePool(sizeMHCPool);
 		}//*/
 	}
