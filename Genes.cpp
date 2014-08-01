@@ -28,6 +28,11 @@ void MHCGenePool::FillMHCGenePoolWithSimilarMHCs(int size)
 	poolSize = size;
 	GenePool allPossibleSimilarMHCs;
 
+	if(poolSize>16)
+	{
+		cout <<"the molecule length is 16: There can only be 17 \"first generation mutants\" ...you picked "<<size<< "...no can do... exiting!"<<endl;exit(4567);
+	}
+
 	int r = RandomNumber(0,65536); //pick a random number to generate a bit string of 16 bits
 	//int r = 20567;
 	bitset<MOLECULE_LENGTH> dummy(r); //create the first bit string
@@ -35,19 +40,13 @@ void MHCGenePool::FillMHCGenePoolWithSimilarMHCs(int size)
 	for(int i=0; i<dummy.size(); i++)
 	{
 		bitset<MOLECULE_LENGTH> firstMutant = dummy.flip(i); //create the HD=1 mutants
-		dummy.flip(i); //flip the original one back
-		for (int j=0; j<firstMutant.size(); j++)
+		int newGene = firstMutant.to_ulong();
+		if(!allPossibleSimilarMHCs.GeneAlreadyInPool(newGene))
 		{
-			bitset<MOLECULE_LENGTH> secondMutant = firstMutant.flip(j); //create the HD=1 mutants of the HD=1 mutants, i.e. create the HD=2 mutants
-			firstMutant.flip(j); //flip it back
-			int newGene = secondMutant.to_ulong();
-			if(!allPossibleSimilarMHCs.GeneAlreadyInPool(newGene))
-			{
-				allPossibleSimilarMHCs.GetGenes().push_back(newGene); //this vector contains all the possible bit strings that have a mutual HD of maximally 4
-				//cout <<newGene <<endl;
-			}
-
+			allPossibleSimilarMHCs.GetGenes().push_back(newGene); //this vector contains all the possible bit strings that have a mutual HD of maximally 4
+			cout <<newGene <<endl;
 		}
+		dummy.flip(i); //flip the original one back
 	}
 
 	//now fill the MHC pool with some of all possible similar MHCs
