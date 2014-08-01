@@ -308,30 +308,12 @@ void Gene:: SetGeneSpecificity()
 	specificity = RandomNumber(1,16);
 
 }
-/*
-void Gene:: SetPseudogene(bool expression)
-{
-	//a pseudo gene should never be functional or expressed
-	if(expression == true)
-	{
-		pseudoGene = true;
-		isExpressed = false;
-		functional = false;
-	}
-	else
-	{
-		pseudoGene = false;
-		isExpressed = true;
-		functional = true;
-	}
 
-}
-*/
-void Gene :: SetPseudogene(int M_id_A,int M_id_B)
+void Gene :: SetPseudogene(int M_id_A, int M_id_B)
 {
-	if(M_id_A == 0 && M_id_B == 0)
+	int sum = M_id_A + M_id_B;
+	if( sum == 0) //if none of the MHC pools is recognized, then the genes should be pseudogenes!
 	{
-		//SetPseudogene(true);
 		pseudoGene = true;
 		isExpressed = false;
 		functional = false;
@@ -340,7 +322,7 @@ void Gene :: SetPseudogene(int M_id_A,int M_id_B)
 	}
 	else
 	{
-		pseudoGene = false; //whether this gene will be functional or expressed, depends on their binding.. this is why we don't change it now!
+		pseudoGene = false; //whether this gene will be functional or expressed, depends on their binding during education.. this is why we don't change it now!
 		mID_A = M_id_A;
 		mID_B = M_id_B;
 	}
@@ -473,8 +455,8 @@ Gene& Gene::Copy(Gene& rhsGene)
 	this->specificity = rhsGene.specificity;
 	//this->genePhenotype = rhsGene.genePhenotype;
 	this->pseudoGene = rhsGene.pseudoGene;
-	this->mID_A = rhsGene.mID_A;
 	this->mID_B = rhsGene.mID_B;
+	this->mID_A = rhsGene.mID_A;
 	return *this;
 }
 
@@ -503,12 +485,14 @@ MHCGene::MHCGene() //constructs an MHC gene with L = 0
 	mID_A = 0;
 	mID_B = 0;
 	int random_bit = 0;
+	geneID = RandomNumber(0,65535);
+	/*
 	for(int i = 0; i< MOLECULE_LENGTH; i++)
 	{
 		random_bit = RandomNumberDouble()<0.5;
 		geneID += random_bit * (1<<i);
 		//cout << random_bit;
-	}
+	}/*/
 	//genePhenotype.first = geneID;
 	//genePhenotype.second = specificity;
 	//cout << genePhenotype.first << " " <<genePhenotype.second <<endl;
@@ -533,12 +517,14 @@ KIRGene::KIRGene(int L) //constructs a KIR gene with a random L from 1-16
 		geneType = activating;
 
 	int random_bit = 0;
+	geneID = RandomNumber(0,65535);
+	/*
 	for(int i = 0; i< MOLECULE_LENGTH; i++)
 	{
 		random_bit = RandomNumberDouble()<0.5;
 		geneID += random_bit * (1<<i);
 		//cout << random_bit;
-	}
+	}/*/
 	//genePhenotype.first = geneID;
 	//genePhenotype.second = specificity;
 	//cout << genePhenotype.first << " " <<genePhenotype.second <<endl;

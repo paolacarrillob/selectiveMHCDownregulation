@@ -148,7 +148,7 @@ void World :: WriteInfo()
 	cout << "Decoy Steals MHC " << decoyStealsMHC << "\n";
 	cout << "Maximal Number of Infections " << maxNumberOfInfectionsPerHost << "\n";
 	cout << "MHC downregulation type" << specificMhcDownregulation <<"\n";
-	cout << "/////////////////// Version rainy summer days.... July is ending 1.4 :-)"<<endl;
+	cout << "/////////////////// Version sunny sunny sunny summer days....version (hopefully) bug free.. August began!!!!!! :-)"<<endl;
 	
 }
 
@@ -158,15 +158,37 @@ bool World::Initialize()
 	//initialize MHcPool
 	if(similarMHCsInThePool)
 	{
-		MHCPoolA.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
-		MHCPoolB.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
+	//	MHCPoolB.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
+		//MHCPoolA.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
+		//*
+		if(RandomNumberDouble()<0.5)
+		{
+			MHCPoolA.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
+			MHCPoolB.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
+		}
+		else
+		{
+			MHCPoolB.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
+			MHCPoolA.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
+		}//*/
+
 	}
 	else
 	{
-		MHCPoolA.FillMHCGenePool(sizeMHCPool);
-		MHCPoolB.FillMHCGenePool(sizeMHCPool);
+		//MHCPoolB.FillMHCGenePool(sizeMHCPool);
+		//MHCPoolA.FillMHCGenePool(sizeMHCPool);
+		//*
+		if(RandomNumberDouble()<0.5)
+		{
+			MHCPoolA.FillMHCGenePool(sizeMHCPool);
+			MHCPoolB.FillMHCGenePool(sizeMHCPool);
+		}
+		else
+		{
+			MHCPoolB.FillMHCGenePool(sizeMHCPool);
+			MHCPoolA.FillMHCGenePool(sizeMHCPool);
+		}//*/
 	}
-
 	MHCPoolA.WriteOutGenes("MHCPool_A.data");
 	MHCPoolB.WriteOutGenes("MHCPool_B.data");
 
@@ -270,7 +292,7 @@ bool World::Birth(int index,unsigned long int next_id)//, Host& baby_host)
 		else
 			parent = randomindex;
 		//cout << "do i get stuck here??? birth event!"<< endl;
-		Host babyHost(KIRLoci,MHCLoci, hosts.at(parent).mhcGenes ,MHCPoolA, MHCPoolB, HLA_C,hosts.at(index).kirGenes,hosts.at(randomindex).kirGenes, mutationRate,education,expressionExtraKIRs, KIRGenesMap, mutationTypeHost, KIRGeneType, simulationTime, timeInvasion, invasionAnalysis);
+		Host babyHost(KIRLoci,MHCLoci, hosts.at(parent).mhcGenes,MHCPoolA, MHCPoolB, HLA_C,hosts.at(index).kirGenes,hosts.at(randomindex).kirGenes, mutationRate,education,expressionExtraKIRs, KIRGenesMap, mutationTypeHost, KIRGeneType, simulationTime, timeInvasion, invasionAnalysis);
 		//cout << "do i get stuck here??? birth event!"<< endl;
 		babyHost.Set_Host_ID(next_id);
 		hosts.push_back(babyHost);
@@ -376,7 +398,6 @@ void World::EscapeOnlyDecoy(int index)
 
 void World::ShuffleHosts()
 {
-	//virtualHosts.clear();
 	shuffledHosts.clear();
 
 	for(unsigned int i=0; i<hosts.size(); i++)

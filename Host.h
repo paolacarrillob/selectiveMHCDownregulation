@@ -146,8 +146,6 @@ public:
 	void SetHostParameters(bool t, double mut, int inftyp, double inftim, double viraldeathm ,double clrtim);
 	void EducateKIRs(); //works with activating receptors also!
 	void MutateGenes(int mutationType, KIRGene& kir_hap2, Map& kirMap, GenePool& mhcPoolA, GenePool& mhcPoolB, int gene_type); //works
-	void MutateGenesForMutualInvasion(int mutationType, KIRGene& kir_hap2, Map& kirMap, GenePool& mhcPoolA, GenePool& mhcPoolB, double simulationTime, double time_invasion, int gene_type); //works
-
 	void ExpressKIRs(int numberOfExpressedKirs); //ok
 	double GetAge()const{return age;}
 	void SetAge(double number){age = number;}

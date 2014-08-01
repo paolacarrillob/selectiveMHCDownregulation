@@ -269,27 +269,17 @@ Host::Host(int loci_kir, int loci_mhc, double _mutationRate, bool _tuning, int n
 	{
 		KIRGene kir = kirGenes.at(i);
 		kirGenes.push_back(kir);
-
 	}
 
 	if(tuning == true)
 		EducateKIRs();
 	ExpressKIRs(numberOfExtraKirs);
-	//CountFunctionalKIRs();
-	//assign MHC A, and B... i should change the constructor to make it directly... but I don't want to spend so much time on this now (31.05.2014)
-	/*
-	mhcA.push_back(mhcGenes.at(0));
-	mhcA.push_back(mhcGenes.at(2));
-	mhcB.push_back(mhcGenes.at(1));
-	mhcB.push_back(mhcGenes.at(3));
-	*/
 	age = RandomNumber(1,70); //population initialized with a random age between 1 and 70
 	//cout <<inhibitoryKIRs << "|" <<activatingKIRs <<"|"<<CountExpressedKIRs() <<endl;
 }
 
 /*Constructs a baby host out of two parents*/
 Host::Host(int loci_kir, int loci_mhc, vector<Gene>& mhcGenesParent, GenePool& mhcPoolA, GenePool& mhcPoolB, bool dist, vector<KIRGene>& kirGenesMother, vector<KIRGene>& kirGenesFather,double _mutationRate, bool _tuning, int numberOfExtraKirs, Map& kirMap, int mutationType, int gene_type, double simulation_time, double time_invation, bool invasion_analysis)
-//Host::Host(int loci_kir, vector<Gene>& mhcGenesParent, GenePool& mhcPool, bool dist, GenePool& kirPool, vector<Gene>& kirGenesMother, vector<Gene>& kirGenesFather, int specificity, double _mutationRate, bool _tuning, int numberOfExtraKirs)
 {	//to create a NEW host: the haplotypes of KIR of BOTH parents are needed. Besides one MHC haplotype of one parent plus one of the pool
 
 	InitializeHostParameters(_mutationRate, _tuning, loci_kir, loci_mhc);
@@ -393,8 +383,6 @@ Host::Host(int loci_kir, int loci_mhc, vector<Gene>& mhcGenesParent, GenePool& m
 	///////////////  ///////////////////////
 	///////////////_////////////////////////
 	////////////////////////////////////////
-	
-	//assign MHC A, and B... i should change the constructor to make it directly... but I don't want to spend so much time on this now (31.05.2014)
 
 	int MHC_init_parent = 0;
 	int MHC_end_parent = 0;
@@ -414,7 +402,6 @@ Host::Host(int loci_kir, int loci_mhc, vector<Gene>& mhcGenesParent, GenePool& m
 		MHC_end_parent = lociMHC;
 	}
 	
-	//copy the KIR haplotype into the new host (mutation occurs!)
 	//Ouss: int or bool? i think you mean bool
 	//Pao: changed to bool
 	bool hap_ouss = (RandomNumberDouble()<0.5);
@@ -448,15 +435,7 @@ Host::Host(int loci_kir, int loci_mhc, vector<Gene>& mhcGenesParent, GenePool& m
 		//0 -> 1
 		//1 -> 2
 		//2 -> 3
-		
-		//*/	
-		/*for(int mm = 0; mm<lociMHC; mm++)
-		 {
-		 Gene mhc2;
-		 int mhcFromTheGenePool = mhcPool.RandomlyPickGene(dist);
-		 mhc2.SetGeneID(mhcFromTheGenePool);
-		 mhcGenes.push_back(mhc2);
-		 }*/
+
 	}
 	else
 	{
@@ -474,14 +453,7 @@ Host::Host(int loci_kir, int loci_mhc, vector<Gene>& mhcGenesParent, GenePool& m
 		int mhcFromTheGenePoolB = mhcPoolB.RandomlyPickGene(dist);
 		mhc1.SetGeneID(mhcFromTheGenePoolB);
 		mhcGenes.push_back(mhc1);
-		
-		/*for(int mm = 0; mm<lociMHC; mm++)
-		 {
-		 Gene mhc2;
-		 int mhcFromTheGenePool = mhcPool.RandomlyPickGene(dist);
-		 mhc2.SetGeneID(mhcFromTheGenePool);
-		 mhcGenes.push_back(mhc2);
-		 }*/
+
 		//copy the MHC haplotype into the new host
 		//*
 		for(int m = MHC_init_parent; m < MHC_end_parent; m++)
@@ -496,20 +468,13 @@ Host::Host(int loci_kir, int loci_mhc, vector<Gene>& mhcGenesParent, GenePool& m
 	
 	//Something is causing 0,2 to be cleared slower than 1 3 :-!
 	//hap_child = true =>  mhc 0,from parent, mhc 1 from parent, mhc 2 from Pool A, mhc 3 from Pool B
-	//hap chile = false => mhc 0 from pool A, mhc 1 from pool B, mhc 2 from parent, mhc 3 from parent
+	//hap child = false => mhc 0 from pool A, mhc 1 from pool B, mhc 2 from parent, mhc 3 from parent
 	
 	//0 is from one parent or the A pool, depending on hap_child
 	//2 is from one parent or the A pool, depending on hap_child
 	//1 is from one parent or the B pool, depending on hap_child 
 	//3 is from one parent or the B pool, depending on hap_child
-	/*
-	mhcA.push_back(mhcGenes.at(0));
-	mhcA.push_back(mhcGenes.at(2));
-	mhcB.push_back(mhcGenes.at(1));
-	mhcB.push_back(mhcGenes.at(3));
-	*/
-	//cout <<mhcA.size()<< "|" <<mhcB.size() <<"|"<<mhcGenes.size() <<endl;
-	
+
 	ResetKIRs(); //reset the expression and functionality back to zero and recalculate these parameters in the education function
 	if(tuning == true)
 	{
@@ -553,6 +518,7 @@ void Host :: MutateGenes(int mutationType, KIRGene& kir_hap2, Map& kirMap, GeneP
 	if(mutationType == 1)//pick another molecules as mutation
 	{
 		KIRGene newGene(RandomNumber(2,16));
+		//KIRGene newGene(5);
 
 		int M_id_A = 0;
 		int M_id_B = 0;
@@ -568,7 +534,7 @@ void Host :: MutateGenes(int mutationType, KIRGene& kir_hap2, Map& kirMap, GeneP
 			if(L >= newGene.GetGeneSpecificity())
 				M_id_A += (1<<i);
 		}
-		
+
 		for(unsigned int j = 0; j < mhcPoolBSize; j++)
 		{
 			Gene mhcGene;
@@ -587,76 +553,6 @@ void Host :: MutateGenes(int mutationType, KIRGene& kir_hap2, Map& kirMap, GeneP
 		kir_hap2.Copy(newGene);
 		return;
 	}
-	/*
-	if(mutationType == 2)//point mutation + L
-	{
-		
-		if(RandomNumberDouble()<0.8) //pointmutation
-		{
-			kir_hap2.PointMutation();
-			int M_id_A = 0;
-			int M_id_B = 0;
-			int mhcPoolASize = mhcPoolA.GetPoolSize();
-			int mhcPoolBSize = mhcPoolB.GetPoolSize();
-			
-			//calculate the value of M_id to determine whether the gene is pseudogene or not
-			for(unsigned int i = 0; i < mhcPoolASize; i++)
-			{
-				Gene mhcGene;
-				mhcGene.SetGeneID(mhcPoolA.GetGenes().at(i));
-				int L = kir_hap2.BindMolecule(mhcGene);
-				if(L >= kir_hap2.GetGeneSpecificity())
-					M_id_A += (1<<i);
-			}
-			
-			for(unsigned int i = 0; i < mhcPoolBSize; i++)
-			{
-				Gene mhcGene;
-				mhcGene.SetGeneID(mhcPoolB.GetGenes().at(i));
-				int L = kir_hap2.BindMolecule(mhcGene);
-				if(L >= kir_hap2.GetGeneSpecificity())
-					M_id_B += (1<<i);
-			}
-			//set the Gene pseudo
-			kir_hap2.SetPseudogene(M_id_A, M_id_B);
-		}
-		
-		if(RandomNumberDouble()<0.8) //mutate L
-		{
-			kir_hap2.MutateSpecificity();
-			int M_id_A = 0;
-			int M_id_B = 0;
-			int mhcPoolASize = mhcPoolA.GetPoolSize();
-			int mhcPoolBSize = mhcPoolB.GetPoolSize();
-			
-			//calculate the value of M_id to determine whether the gene is pseudogene or not
-			for(unsigned int i = 0; i < mhcPoolASize; i++)
-			{
-				Gene mhcGene;
-				mhcGene.SetGeneID(mhcPoolA.GetGenes().at(i));
-				int L = kir_hap2.BindMolecule(mhcGene);
-				if(L >= kir_hap2.GetGeneSpecificity())
-					M_id_A += (1<<i);
-			}
-			
-			for(unsigned int i = 0; i < mhcPoolBSize; i++)
-			{
-				Gene mhcGene;
-				mhcGene.SetGeneID(mhcPoolB.GetGenes().at(i));
-				int L = kir_hap2.BindMolecule(mhcGene);
-				if(L >= kir_hap2.GetGeneSpecificity())
-					M_id_B += (1<<i);
-			}
-			//set the Gene pseudo
-			kir_hap2.SetPseudogene(M_id_A, M_id_B);
-		}
-		if(RandomNumberDouble()<0.8)//mutate type
-		{
-			kir_hap2.MutateReceptorType();
-		}
-		return;
-	}
-	*/
 }
 /*This functions tunes the KIR repertoire according to the self MHC repertoire and whether they are inhibiting or activating*/
 void Host :: EducateKIRs()
@@ -665,90 +561,28 @@ void Host :: EducateKIRs()
 	//cout <<"hello...educating the kirs..."<<endl;
 	for(kirIt = kirGenes.begin(); kirIt !=kirGenes.end(); kirIt ++)
 	{
-
-		//kirIt->PrintGenes();
 		if(kirIt->IsPseudogene()||kirIt->IsActivating()) //ignore pseudogenes and consider only iNKRs
 			continue;
-		//kirIt->PrintGenes();cout<<endl;
+		bool isKirLicensed = false;
 		vector<Gene>::iterator mhcIt;
 		for(mhcIt = mhcGenes.begin(); mhcIt !=mhcGenes.end(); mhcIt ++)
 		{
 			int bindingStrength = kirIt->BindMolecule(*mhcIt);
-			//mhcIt->PrintBits();
-			//kirIt->PrintBits();
 			if(bindingStrength>=kirIt->GetGeneSpecificity()) //AND it binds to the MHC
-			{
-				//cout << "it binds!"<<endl;
-				//kirIt->PrintGenes();
-				kirIt->SetGeneFunctionality(true); //it is licensed!
-				kirIt->SetGeneExpression(true);
-				break;
-				//cout<< "inhibitory |" <<kirIt->IsFunctional()<< kirIt->GetGeneType()<<kirIt->IsExpressed()<<endl;
-			}
-			else // but if it doesn't bind
-			{
-				//cout << "it doesn't bind!"<<endl;
-				kirIt->SetGeneFunctionality(false); // it should not be licensed
-				kirIt->SetGeneExpression(false);
-				//cout<< "inhibitory |" <<kirIt->IsFunctional()<< kirIt->GetGeneType() <<kirIt->IsExpressed()<<endl;
-			}
+				isKirLicensed = true;
+		}
+		if(isKirLicensed)
+		{
+			kirIt->SetGeneFunctionality(true); //it is licensed!
+			kirIt->SetGeneExpression(true);
+		}
+		else
+		{
+			kirIt->SetGeneFunctionality(false); // it should not be licensed
+			kirIt->SetGeneExpression(false);
 		}
 	}
 	CountFunctionalInhibitoryKIRs();
-	//only if there is at least one licensed iNKRs, the NK cells are functional..
-	// otherwise, we consider cell having only aNKRs to be anergic/hyporesponsive
-	if(inhibitoryKIRs > 0)
-	{
-		//cout <<"yeeeeeaaaaa, at least one licensed iNKR, now the NK cells are functional and we can start looking at the aNKR"<<endl;
-		for(kirIt=kirGenes.begin(); kirIt!=kirGenes.end(); kirIt++)
-		{
-			if(kirIt->IsInhibitory())
-				continue;
-			if (kirIt->IsPseudogene())
-				continue;
-			
-//			int education_signal_activating = 0; // to keep track of the activating signal per receptor
-			bool kirDidNotBindToAnyOfMHC = true;
-			vector<Gene>::iterator mhcIt;
-			for(mhcIt=mhcGenes.begin(); mhcIt!=mhcGenes.end(); mhcIt++)
-			{
-				int bindingStrength = kirIt->BindMolecule(*mhcIt);
-				//mhcIt->PrintBits();
-				//kirIt->PrintBits();
-				if(bindingStrength>=kirIt->GetGeneSpecificity()) // if an aNKR binds to the MHC
-				{
-					//cout << "it binds!"<<endl;
-					kirIt->SetGeneFunctionality(false); //this gene is unlicensed
-					kirIt->SetGeneExpression(false);
-					kirDidNotBindToAnyOfMHC=false;
-					break;
-					//cout<< "activating |" <<kirIt->IsFunctional()<< kirIt->GetGeneType()<<endl;
-				}
-//				else //BUT if it deosn't bind
-//				{
-					//cout << "it doesn't bind!"<<endl;
-//					education_signal_activating ++; //keep track of how many MHC it doesn't bind
-					//cout << education_signal_activating <<endl;
-					//cout<< "activating |" <<kirIt->IsFunctional()<< kirIt->GetGeneType()<<endl;
-//				}
-			}
-			if(kirDidNotBindToAnyOfMHC)
-//			if(education_signal_activating == mhcGenes.size()) //if the activating KIR doesn't recognize ANY of the MHC
-			{
-				//cout << education_signal_activating << "|" << mhcGenes.size() << ": ";
-				kirIt->SetGeneFunctionality(true); //the gene is licensed
-				kirIt->SetGeneExpression(true);
-				//cout<< "activating |"<<kirIt->IsFunctional()<< kirIt->GetGeneType()<<endl;
-			}
-		}
-		CountFunctionalActivatingKIRs();
-	}
-	/*cout <<"after educating all of them"<<endl;
-	for(kirIt=kirGenes.begin(); kirIt!=kirGenes.end();kirIt++)
-	{
-		kirIt->PrintGenes();
-	}*/
-	//exit(-1);
 }
 
 void Host :: ExpressKIRs(int numberOfExtraKirs)
@@ -1044,104 +878,17 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 	switch (virusType)
 	{
 		case 0: //if it's a wild-type virus, check first whether the viral molecule engages an aNKR
-			cout<< "This is not happenning !" <<endl;
-			exit (666);
 		{
-			//cout <<"virus is wild-type and is being cleared"<<endl;
-			vector<KIRGene> :: iterator firstIt;
-			int aNKRs_bindingViralMol = 0;
-			for(firstIt = kirGenes.begin(); firstIt !=kirGenes.end(); firstIt++)
-			{
-				if(!firstIt->IsExpressed())
-					continue;
-
-				int score = firstIt->BindMolecule(_infection.pathogen.viralMolecule);
-				if(score>=firstIt->GetGeneSpecificity()) //check if the NKRs bind the decoy
-				{
-					if(firstIt->IsActivating()) //if yes, counte them only if they are activating
-							aNKRs_bindingViralMol++;
-				}
-			}
-			if(aNKRs_bindingViralMol)
-			{
-				if(RandomNumberDouble()<0.95)//if there is at least one aNKR that binds the viral protein
-				{
-					_infection.ResetInfection(simulationTime);//there should be maximal protection
-					_infection.SetProtectionLevel("best");
-					return;
-				}
-				//else
-				//	_infection.SetProtectionLevel("zero");
-			}
-			else //if there not aNKR binding the viral protein
-			{
-				if(RandomNumberDouble()<0.8) //the protection is still good (like the wild-type virus)
-				{
-					_infection.ResetInfection(simulationTime);//because of responses of the adaptive immune system
-					_infection.SetProtectionLevel("high");
-					return;
-				}
-				//else
-					//_infection.SetProtectionLevel("zero");
-			}
-
+			cout<< "This should not be happenning !...this is selective MHC Downregulation!!!!" <<endl;
+			exit (666);
 		}break;
 		case 1: //if it's an mHC downregulating virus, check first whether there is only one MHC that has been downregulated
 		{
-			cout<< "This is not happenning !" <<endl;
+			cout<< "This should not be happenning !...this is selective MHC Downregulation!!!" <<endl;
 			exit (666);
-			
-			//cout <<"virus is downregulating all MHCs and is being cleared"<<endl;
-			if(_infection.pathogen.IsDownregulatingMHCSpecifically())
-			{
-				cout<<"specific MHC downregulation should not happen here...something went very wrong!!!!"<<endl; exit(-1);
-			}
-			else //if ALL MHCs are being downregulated
-			{
-				vector<KIRGene>::iterator nkrIt; //check whether any iKIR is recognizing it!
-				int inhibiting_kirs_recognizing_decoy = 0;
-				int activating_kirs_recognizing_decoy = 0;
-				//go through each receptor and see whether it binds to the viral molecule!
-				for(nkrIt = kirGenes.begin(); nkrIt !=kirGenes.end(); nkrIt ++)
-				{
-					if(!nkrIt->IsExpressed()) //ignore KIRs that are not functional / expressed!
-						continue;
-					else
-					{
-						int score = nkrIt->BindMolecule(_infection.pathogen.viralMolecule); //check if they bind to the decoy!
-						if(score>=nkrIt->GetGeneSpecificity()) //receptors binds to decoy
-						{
-							//now check what kind of receptors we have
-							if(nkrIt->IsInhibitory()) //if it is inhibiting
-								inhibiting_kirs_recognizing_decoy++;//keep track of how many KIRs are recognizing decoys
-
-							if(nkrIt->IsActivating()) //if it is activating
-								activating_kirs_recognizing_decoy ++;//keep track of how many KIRs are recognizing decoys
-						}
-					}
-				}
-				if(inhibitoryKIRs && !activatingKIRs) //if that host has ONLY inhibitory receptors
-					ClearDecoyWithInhibitoryOnly(inhibiting_kirs_recognizing_decoy, simulationTime, _infection);
-
-				 //if(!inhibitoryKIRs && activatingKIRs) //if that host has ONLY activating receptors
-					// ClearDecoyWithActivatingOnly(activating_kirs_recognizing_decoy, simulationTime, _infection);
-
-
-				if(inhibitoryKIRs && activatingKIRs) //if that host has both types of receptors
-					ClearDecoyWithActivatingAndInhibitory(inhibiting_kirs_recognizing_decoy, activating_kirs_recognizing_decoy, simulationTime, _infection);
-			}
 		}break;
 		case 2: //it downregulates A
 		{	
-			/*
-			 //toy model
-			if(RandomNumberDouble()<0.6) //
-			{
-				_infection.ResetInfection(simulationTime);
-				return;
-				//cout <<"virus is downregulating B part of the MHC and is being cleared"<<endl;
-			}break;//*/
-			
 			vector<Gene> mhcB_Local;
 			mhcB_Local.push_back(mhcGenes.at(1));
 			mhcB_Local.push_back(mhcGenes.at(3));
@@ -1174,44 +921,10 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 					}
 				}
 
-				/*else
-				{
-					//if the virus downregulates A, then check whether the iNKRs bind the B alleles
-					vector<Gene>::iterator mhcB_Local_it = mhcB_Local.begin();
-					for(;mhcB_Local_it!=mhcB_Local.end();mhcB_Local_it++)					
-					//for(unsigned int i = 0; i< mhcB_local.size();i++)
-					{
-						//int score = nkrIt->BindMolecule(mhcB.at(i));
-						//int score = nkrIt->BindMolecule(mhcB_local.at(i));
-						int score = nkrIt->BindMolecule(*mhcB_Local_it);
-						if(score < nkrIt->GetGeneSpecificity())
-						{
-							//if one iNKR does NOT bind to an MHC, clear the infection with p=0.6,
-							//with p = 1-0.6 do not clear it ;). Anyway... return
-							if(RandomNumberDouble()<0.6) //
-							{
-								_infection.ResetInfection(simulationTime);
-								//cout <<"virus is downregulating A part of the MHC and is being cleared"<<endl;
-							}
-							return;
-							//cout << "one protective iNKR found virus downregulating MHC A :-) "<<endl;
-						}
-					}
-				}//*/
 			}
 		}break;
 		case 3: //it downregulates B
 		{
-			
-			/*
-			toy model
-			if(RandomNumberDouble()<0.6) //
-			{
-				_infection.ResetInfection(simulationTime);
-				return;
-				//cout <<"virus is downregulating B part of the MHC and is being cleared"<<endl;
-			}break;
-			//*/
 			vector<Gene> mhcA_Local;
 	
 			mhcA_Local.push_back(mhcGenes.at(0));
@@ -1239,32 +952,10 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 						//if one iNKR is protective, i.e. if it does NOT bind to any MHC A, clear the infection with p=0.6,
 						//with p = 1-0.6 do not clear it ;). Anyway... return
 						if(RandomNumberDouble()<0.6) //
-							_infection.ResetInfection(simulationTime);						}
+							_infection.ResetInfection(simulationTime);
 						return;
-				}
-				/*else
-				{
-					//if the virus downregulates B, then check whether the iNKRs bind the A alleles
-					vector<Gene>::iterator mhcA_Local_it = mhcA_Local.begin();
-					for(;mhcA_Local_it!=mhcA_Local.end();mhcA_Local_it++)
-					//for(unsigned int i = 0; i< mhcA_Local.size();i++)
-					{
-						int score = nkrIt->BindMolecule(*mhcA_Local_it);
-						if(score < nkrIt->GetGeneSpecificity())
-						{
-							//if one iNKR does NOT bind to an MHC, clear the infection with p=0.6,
-							//with p = 1-0.6 do not clear it ;). Anyway... return
-							if(RandomNumberDouble()<0.6) 
-							{
-								_infection.ResetInfection(simulationTime);
-								
-								//cout <<"virus is downregulating B part of the MHC and is being cleared"<<endl;
-							}
-							return;
-							//cout << "one protective iNKR found virus downregulating MHC B :-) "<<endl;
-						}
 					}
-				}//*/
+				}
 			}	
 		}break;
 		default: cout <<"Host::ClearInfection()... weird virusType detected!!!"<<endl; exit(-890);
