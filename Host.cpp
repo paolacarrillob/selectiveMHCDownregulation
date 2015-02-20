@@ -889,6 +889,10 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 		}break;
 		case 2: //it downregulates A
 		{	
+			//toy simulation
+			/*if(RandomNumberDouble()<0.6)
+				_infection.ResetInfection(simulationTime);
+			return;*/
 			vector<Gene> mhcB_Local;
 			mhcB_Local.push_back(mhcGenes.at(1));
 			mhcB_Local.push_back(mhcGenes.at(3));
@@ -925,6 +929,10 @@ void Host::ClearInfection(double simulationTime, Infection& _infection)
 		}break;
 		case 3: //it downregulates B
 		{
+			//toy simulation
+			/*if(RandomNumberDouble()<0.6)
+				_infection.ResetInfection(simulationTime);
+			return;*/
 			vector<Gene> mhcA_Local;
 	
 			mhcA_Local.push_back(mhcGenes.at(0));

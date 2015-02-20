@@ -46,11 +46,17 @@ void MHCGenePool::FillMHCGenePoolWithSimilarMHCs(int size)
 				bitset<MOLECULE_LENGTH> thirdMutant = secondMutant.flip(k);
 				secondMutant.flip(k); //flip it back
 
-				int newGene = thirdMutant.to_ulong();
-				if(!allPossibleSimilarMHCs.GeneAlreadyInPool(newGene))
+				for(int l = 0; l<thirdMutant.size(); l++)
 				{
-					allPossibleSimilarMHCs.GetGenes().push_back(newGene); //this vector contains all the possible bit strings that have a mutual HD of maximally 4
-					//cout <<newGene <<endl;
+					bitset<MOLECULE_LENGTH> fourthMutant = thirdMutant.flip(l);
+					thirdMutant.flip(l);
+
+					int newGene = fourthMutant.to_ulong();
+					if(!allPossibleSimilarMHCs.GeneAlreadyInPool(newGene))
+					{
+						allPossibleSimilarMHCs.GetGenes().push_back(newGene); //this vector contains all the possible bit strings that have a mutual HD of maximally 4
+						//cout <<newGene <<endl;
+					}
 				}
 			}
 
