@@ -584,8 +584,8 @@ void Host :: MutateGenes(int mutationType, KIRGene& kir_hap2, Map& kirMap, GeneP
 		kir_hap2.SetPseudogene(M_id_A, M_id_B);
 		//*/
 		return;
-
 	}
+
 }
 /*This functions tunes the KIR repertoire according to the self MHC repertoire and whether they are inhibiting or activating*/
 void Host :: EducateKIRs()
