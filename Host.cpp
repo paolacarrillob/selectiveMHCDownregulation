@@ -585,6 +585,75 @@ void Host :: MutateGenes(int mutationType, KIRGene& kir_hap2, Map& kirMap, GeneP
 		//*/
 		return;
 	}
+    if(mutationType == 3) //pointmutation + L + random jumps
+    {
+
+    	if(RandomNumberDouble()<0.2) //with a low probability generate a random new bit string with a new random L
+    	{
+        	KIRGene newGene(RandomNumber(2,16));
+    		//KIRGene newGene(5);
+
+    		int M_id_A = 0;
+    		int M_id_B = 0;
+    		int mhcPoolASize = mhcPoolA.GetPoolSize();
+    		int mhcPoolBSize = mhcPoolB.GetPoolSize();
+
+    		//calculate the value of M_id to determine whether the gene is pseudogene or not
+    		for(unsigned int i = 0; i < mhcPoolASize; i++)
+    		{
+    			Gene mhcGene;
+    			mhcGene.SetGeneID(mhcPoolA.GetGenes().at(i));
+    			int L = newGene.BindMolecule(mhcGene);
+    			if(L >= newGene.GetGeneSpecificity())
+    				M_id_A += (1<<i);
+    		}
+
+    		for(unsigned int j = 0; j < mhcPoolBSize; j++)
+    		{
+    			Gene mhcGene;
+    			mhcGene.SetGeneID(mhcPoolB.GetGenes().at(j));
+    			int L = newGene.BindMolecule(mhcGene);
+    			if(L >= newGene.GetGeneSpecificity())
+    				M_id_B += (1<<j);
+    		}
+    		//set the Gene pseudo
+    		newGene.SetPseudogene(M_id_A, M_id_B);
+    		if(gene_type !=2)////force to have only one type of receptors, if the user wants it!
+    			newGene.SetGeneType(gene_type);
+    		kir_hap2.Copy(newGene);
+    		return;
+    	}
+
+    	kir_hap2.PointMutation();
+        kir_hap2.MutateSpecificity();
+        int M_id_A = 0;
+        int M_id_B = 0;
+        int mhcPoolASize = mhcPoolA.GetPoolSize();
+        int mhcPoolBSize = mhcPoolB.GetPoolSize();
+
+        //calculate the value of M_id to determine whether the gene is pseudogene or not
+        for(unsigned int i = 0; i < mhcPoolASize; i++)
+        {
+                Gene mhcGene;
+                mhcGene.SetGeneID(mhcPoolA.GetGenes().at(i));
+                int L = kir_hap2.BindMolecule(mhcGene);
+                if(L >= kir_hap2.GetGeneSpecificity())
+                        M_id_A += (1<<i);
+        }
+
+        for(unsigned int j = 0; j < mhcPoolBSize; j++)
+        {
+                Gene mhcGene;
+                mhcGene.SetGeneID(mhcPoolB.GetGenes().at(j));
+                int L = kir_hap2.BindMolecule(mhcGene);
+                if(L >= kir_hap2.GetGeneSpecificity())
+                        M_id_B += (1<<j);
+        }
+        //set the Gene pseudo
+        kir_hap2.SetPseudogene(M_id_A, M_id_B);
+        //*/
+        return;
+    }
 
 }
 /*This functions tunes the KIR repertoire according to the self MHC repertoire and whether they are inhibiting or activating*/
