@@ -49,6 +49,7 @@ void MHCGenePool::FillMHCGenePoolWithSimilarMHCs(int size, int seed)
 
 		}
 	}
+
 	cout << allPossibleSimilarMHCs.GetPoolSize() <<endl;
 	//now fill the MHC pool with some of all possible similar MHCs
 	int i=0;

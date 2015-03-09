@@ -125,9 +125,12 @@ int main(int argc, char*argv[])
 
 	 poolA.FillMHCGenePoolWithSimilarMHCs(15,r);
 	 MHCGenePool poolB;
-
+	 bitset<MOLECULE_LENGTH> dummy(r);
+	 dummy.flip(15);
+	 int newSeed = dummy.to_ulong();
+	 cout << r << " " << newSeed <<endl;
 	 //r = RandomNumber(0,65536);//pick a random number to generate a bit string of 16 bits
-	 poolB.FillMHCGenePoolWithSimilarMHCs(15,r);
+	 poolB.FillMHCGenePoolWithSimilarMHCs(15,newSeed);
 	 
 	 int a = poolA.ComparePools(poolB);
 	 overlap.push_back(a);
