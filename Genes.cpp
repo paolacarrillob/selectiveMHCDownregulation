@@ -23,12 +23,12 @@ void MHCGenePool::FillMHCGenePool(int size)
 	}
 }
 
-void MHCGenePool::FillMHCGenePoolWithSimilarMHCs(int size)
+void MHCGenePool::FillMHCGenePoolWithSimilarMHCs(int size, int seed)
 {
 	poolSize = size;
 	GenePool allPossibleSimilarMHCs;
 
-	int r = RandomNumber(0,65536); //pick a random number to generate a bit string of 16 bits
+	int r = seed;
 	//int r = 20567;
 	bitset<MOLECULE_LENGTH> dummy(r); //create the first bit string
 	//genes.push_back(r);
@@ -49,7 +49,7 @@ void MHCGenePool::FillMHCGenePoolWithSimilarMHCs(int size)
 
 		}
 	}
-
+	cout << allPossibleSimilarMHCs.GetPoolSize() <<endl;
 	//now fill the MHC pool with some of all possible similar MHCs
 	int i=0;
 	while(i<poolSize)

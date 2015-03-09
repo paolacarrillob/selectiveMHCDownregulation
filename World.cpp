@@ -163,13 +163,13 @@ bool World::Initialize()
 		//*
 		if(RandomNumberDouble()<0.5)
 		{
-			MHCPoolA.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
-			MHCPoolB.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
+			MHCPoolA.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool,RandomNumber(0,65536));
+			MHCPoolB.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool,RandomNumber(0,65536));
 		}
 		else
 		{
-			MHCPoolB.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
-			MHCPoolA.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool);
+			MHCPoolB.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool,RandomNumber(0,65536));
+			MHCPoolA.FillMHCGenePoolWithSimilarMHCs(sizeMHCPool,RandomNumber(0,65536));
 		}//*/
 
 	}

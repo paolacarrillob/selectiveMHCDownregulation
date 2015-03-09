@@ -113,24 +113,30 @@ int main(int argc, char*argv[])
 	 
 	 exit(-1);*/
 	
-	/*
+	//*
 	 //testing the overlap between two MHC pools
 	 vector<int> overlap;
+	 int total_overlap = 0;
 	 for (int i = 0; i<1000; i++)
 	 {
 	 
 	 MHCGenePool poolA;
-	 //poolA.FillMHCGenePool(20);
-	 poolA.FillMHCGenePoolWithSimilarMHCs(30);
+	 int r = RandomNumber(0,65536); //pick a random number to generate a bit string of 16 bits
+
+	 poolA.FillMHCGenePoolWithSimilarMHCs(15,r);
 	 MHCGenePool poolB;
-	 //poolB.FillMHCGenePool(20);
-	 poolB.FillMHCGenePoolWithSimilarMHCs(30);
+
+	 //r = RandomNumber(0,65536);//pick a random number to generate a bit string of 16 bits
+	 poolB.FillMHCGenePoolWithSimilarMHCs(15,r);
 	 
 	 int a = poolA.ComparePools(poolB);
 	 overlap.push_back(a);
+	 total_overlap+=a;
 	 //cout <<"the overlap between poolA and pool B is: "<<a<<endl;
 	 }
-	 for(int i = 0; i<=30; i++)
+	 double mean_overlap = total_overlap/1000;
+	 cout <<"the mean overlap between poolA and pool B is: "<<mean_overlap<<endl;
+	 for(int i = 0; i<=15; i++)
 	 {
 	 double mycount = count(overlap.begin(), overlap.end(), i);
 	 mycount = mycount/1000;
@@ -139,7 +145,7 @@ int main(int argc, char*argv[])
 	 cout << i << " " << mycount <<endl;
 	 }
 	 
-	 exit(-1);*/
+	 exit(-1);/*/
 	
 	/*Map myMap;
 	 KIRGene bla(1);

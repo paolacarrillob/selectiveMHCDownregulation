@@ -127,7 +127,7 @@ class MHCGenePool: public GenePool
 public:
 	MHCGenePool(){};
 	void FillMHCGenePool(int size);//works
-	void FillMHCGenePoolWithSimilarMHCs(int size);
+	void FillMHCGenePoolWithSimilarMHCs(int size, int seed);
 	virtual ~MHCGenePool(){};
 protected:
 	int poolSize;
