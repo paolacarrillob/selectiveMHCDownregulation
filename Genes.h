@@ -50,6 +50,7 @@ public:
 	bool IsGeneUnique(vector<Gene>& genePool, int counter);//works
 	int BindMolecule(const Gene& anotherMolecule); //works NEW
 	int CountHammingDistance(Gene& anotherMolecule);
+	int CountSimilarity(const Gene& anotherMolecule);
 
 	void SaveBackupGenes(fstream& backupFile);//works
 	void SaveGenes (fstream& outfile);
@@ -116,6 +117,7 @@ public:
 	vector<int>& GetGenes(){return genes;};
 	void WriteOutGenes(const string& fileName);//works
 	int ComparePools(GenePool& otherPool);
+	double ComparePoolSimilarity(GenePool& otherPool);
 
 protected:
 	vector<int> genes;//a vector of integers

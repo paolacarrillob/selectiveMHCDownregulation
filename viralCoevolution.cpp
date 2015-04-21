@@ -115,38 +115,73 @@ int main(int argc, char*argv[])
 	
 	//*
 	 //testing the overlap between two MHC pools
-	 vector<int> overlap;
-	 int total_overlap = 0;
-	 for (int i = 0; i<1000; i++)
-	 {
-	 
-	 MHCGenePool poolA;
-	 int r = RandomNumber(0,65536); //pick a random number to generate a bit string of 16 bits
+/*
+	Gene mol;
+	mol.SetGeneID((RandomNumber(0,65536)));
+	bitset<MOLECULE_LENGTH> dummy(mol.GetGeneID());
 
-	 poolA.FillMHCGenePoolWithSimilarMHCs(15,r);
-	 MHCGenePool poolB;
-	 bitset<MOLECULE_LENGTH> dummy(r);
-	 dummy.flip(15);
-	 int newSeed = dummy.to_ulong();
-	 cout << r << " " << newSeed <<endl;
-	 //r = RandomNumber(0,65536);//pick a random number to generate a bit string of 16 bits
-	 poolB.FillMHCGenePoolWithSimilarMHCs(15,newSeed);
-	 
-	 int a = poolA.ComparePools(poolB);
-	 overlap.push_back(a);
-	 total_overlap+=a;
-	 //cout <<"the overlap between poolA and pool B is: "<<a<<endl;
-	 }
-	 double mean_overlap = total_overlap/1000;
-	 cout <<"the mean overlap between poolA and pool B is: "<<mean_overlap<<endl;
-	 for(int i = 0; i<=15; i++)
+	string myString = dummy.to_string<char,std::string::traits_type,std::string::allocator_type>();
+	cout << "original string: "<<myString <<endl;
+
+	dummy.flip((RandomNumber(0,15)));
+	myString = dummy.to_string<char,std::string::traits_type,std::string::allocator_type>();
+	cout << "flipped string:  "<<myString <<endl;
+
+	int newGeneID = dummy.to_ulong();
+	Gene anotherMol;
+	anotherMol.SetGeneID(newGeneID);
+	int similarity = mol.CountSimilarity(anotherMol);
+	cout <<"similarity: "<<similarity<<endl;
+    exit(-1); */
+
+
+	 vector<int> overlap;
+	 vector<double> similarityPools;
+	 int total_overlap = 0;
+	 double total_average = 0.0;
+	 for (int i = 0; i<1; i++)
 	 {
-	 double mycount = count(overlap.begin(), overlap.end(), i);
-	 mycount = mycount/1000;
-	 //double percentage_mhc = mycount/size;
 	 
-	 cout << i << " " << mycount <<endl;
+		 MHCGenePool poolA;
+		 int r = RandomNumber(0,65536); //pick a random number to generate a bit string of 16 bits
+		 poolA.FillMHCGenePoolWithSimilarMHCs(16,r);
+
+		 MHCGenePool poolB;
+		 bitset<MOLECULE_LENGTH> dummy(r);
+		// string myString = dummy.to_string<char,std::string::traits_type,std::string::allocator_type>();
+		// cout << myString <<endl;
+
+		 int HD = 0;
+		 //increase HD to seed
+		 for(int j = 0; j < HD; j++)
+		 {
+			 dummy.flip(j);
+			// string myString = dummy.to_string<char,std::string::traits_type,std::string::allocator_type>();
+			 //cout << myString <<endl;
+		 }
+
+		 int newSeed = dummy.to_ulong();
+		 poolB.FillMHCGenePoolWithSimilarMHCs(16, r);
+
+		 double average_sim = poolA.ComparePoolSimilarity(poolB);
+		 total_average +=poolA.ComparePoolSimilarity(poolB);
+		 //similarityPools.push_back(average_sim);
+
+		 int a = poolA.ComparePools(poolB);
+		 overlap.push_back(a);
+		// cout <<"the similarity between poolA and pool B is: "<<average_sim<<endl;
 	 }
+
+	 double mean_overlap = total_overlap/1000;
+	 double mean_similarity = total_average / 1000;
+	// cout <<"the mean overlap between poolA and pool B is: "<<mean_overlap << endl;
+	 cout <<"the mean similarity between poolA and pool B is: "<<mean_similarity << endl;
+	/* for(int i = 0; i<=16; i++)
+	 {
+		 double mycount = count(overlap.begin(), overlap.end(), i);
+		 mycount = mycount/1000;
+		 cout << i << " " << mycount<< endl;
+	 }*/
 	 
 	 exit(-1);/*/
 	

@@ -27,6 +27,10 @@ void MHCGenePool::FillMHCGenePoolWithSimilarMHCs(int size, int seed)
 {
 	poolSize = size;
 	GenePool allPossibleSimilarMHCs;
+	if(poolSize>16)
+	{
+		cout <<"the molecule length is 16: There can only be 17 \"first generation mutants\" ...you picked "<<size<< "...no can do... exiting!"<<endl;exit(4567);
+	}
 
 	int r = seed;
 	//int r = 20567;
@@ -34,23 +38,36 @@ void MHCGenePool::FillMHCGenePoolWithSimilarMHCs(int size, int seed)
 	//genes.push_back(r);
 	for(int i=0; i<dummy.size(); i++)
 	{
-		bitset<MOLECULE_LENGTH> firstMutant = dummy.flip(i); //create the HD=1 mutants
-		dummy.flip(i); //flip the original one back
-		for (int j=0; j<firstMutant.size(); j++)
-		{
-			bitset<MOLECULE_LENGTH> secondMutant = firstMutant.flip(j); //create the HD=1 mutants of the HD=1 mutants, i.e. create the HD=2 mutants
-			firstMutant.flip(j); //flip it back
-			int newGene = secondMutant.to_ulong();
+			bitset<MOLECULE_LENGTH> firstMutant = dummy.flip(i); //create the HD=1 mutants
+			int newGene = firstMutant.to_ulong();
 			if(!allPossibleSimilarMHCs.GeneAlreadyInPool(newGene))
 			{
 				allPossibleSimilarMHCs.GetGenes().push_back(newGene); //this vector contains all the possible bit strings that have a mutual HD of maximally 4
 				//cout <<newGene <<endl;
 			}
+			dummy.flip(i); //flip the original one back
+			/*for (int j=0; j<firstMutant.size(); j++)
+			{
+				bitset<MOLECULE_LENGTH> secondMutant = firstMutant.flip(j); //create the HD=1 mutants of the HD=1 mutants, i.e. create the HD=2 mutants
+				firstMutant.flip(j); //flip it back
 
-		}
+				for(int k = 0; k< secondMutant.size(); k++) //create in a similar way the third generation mutants
+				{
+					bitset<MOLECULE_LENGTH> thirdMutant = secondMutant.flip(k);
+					secondMutant.flip(k); //flip it back
+
+					int newGene = thirdMutant.to_ulong();
+					if(!allPossibleSimilarMHCs.GeneAlreadyInPool(newGene))
+					{
+						allPossibleSimilarMHCs.GetGenes().push_back(newGene); //this vector contains all the possible bit strings that have a mutual HD of maximally 4
+						//cout <<newGene <<endl;
+					}
+				}
+
+			}*/
 	}
 
-	cout << allPossibleSimilarMHCs.GetPoolSize() <<endl;
+	//cout << allPossibleSimilarMHCs.GetPoolSize() <<endl;
 	//now fill the MHC pool with some of all possible similar MHCs
 	int i=0;
 	while(i<poolSize)
@@ -92,6 +109,43 @@ int GenePool:: ComparePools(GenePool& otherPool)
 		}
 	}
 	return diff;
+}
+
+double GenePool:: ComparePoolSimilarity(GenePool& otherPool)
+{
+	int counter = 0;
+	int similarity = 0;
+	vector<int> all_similarities;
+	double mean = 0.0;
+	for(int i = 0; i< genes.size(); i++)
+	{
+		Gene dummy;
+		dummy.SetGeneID(genes.at(i));
+		for(int j = 0; j< otherPool.genes.size(); j++)
+		{
+			Gene otherDummy;
+			otherDummy.SetGeneID(otherPool.genes.at(j));
+
+			bitset<MOLECULE_LENGTH> pao_A(genes.at(i));
+			bitset<MOLECULE_LENGTH> pao_B(otherPool.genes.at(j));
+
+			similarity = dummy.CountSimilarity(otherDummy);
+			cout << pao_A <<" | "<<pao_B <<" | " <<similarity<<endl;
+			all_similarities.push_back(similarity);
+			counter ++;
+		}
+	}
+	double sum = 0.0;
+	//now check how frequent the similairity scores appear
+	 for(int i = 0; i<=16; i++)
+	 {
+		 double mycount = count(all_similarities.begin(), all_similarities.end(), i);
+		 double freq = mycount/counter;
+		 mean += i*mycount/counter;
+		 sum +=freq;
+		// cout << i << " " << mycount << " "<<mean<<" "<<freq<<" "<<sum<<endl;
+	 }
+	return mean;
 }
 
 KIRGenePool :: KIRGenePool(GenePool& mhcPool, bool dist, int specificity)
@@ -414,7 +468,34 @@ int Gene::BindMolecule(const Gene& anotherMolecule)
 	return max;
 }
 
+int Gene:: CountSimilarity(const Gene& anotherMolecule)
+{
+	int counter = 0;
+	int max = 0;
+	/*bitset<MOLECULE_LENGTH> dummy(geneID);
+	bitset<MOLECULE_LENGTH> otherDummy(anotherMolecule.geneID);
 
+	string myString = dummy.to_string<char,std::string::traits_type,std::string::allocator_type>();
+	string myOtherString = otherDummy.to_string<char,std::string::traits_type,std::string::allocator_type>();
+
+	cout << "pool A "<<myString << " ";
+	cout << "pool B "<<myOtherString <<endl;*/
+
+	for( int l = 1; l < pow(2.0,16); l = l*2)
+	{
+		if(!((geneID & l) ^ (anotherMolecule.geneID & l))) //check with XOR operator whether the bits are  complementary
+		{
+			counter ++;
+			if(counter > max)
+				max = counter;
+		}
+		else
+			counter = 0;
+	}
+	if(counter > max)
+		max = counter;
+	return max;
+}
 int Gene:: CountHammingDistance(Gene& anotherMolecule )
 {
 	int hd =0;
